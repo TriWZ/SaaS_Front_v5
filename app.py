@@ -4,7 +4,7 @@ import requests
 from datetime import datetime
 from fpdf import FPDF
 
-API_URL = st.secrets.get("api_url", "https://your-fastapi-url.onrender.com")
+API_URL = st.secrets.get("api_url", "https://saas-back-v4.onrender.com")
 
 st.title("Triphorium Energy Dashboard")
 
@@ -25,10 +25,10 @@ st.subheader("10-Year Energy Trends")
 try:
     res = requests.get(f"{API_URL}/energy/")
     if res.status_code == 200:
-        data = requests.get("https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")
+        data = requests.get("https://saas-back-v4.onrender.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")
         df = pd.read_sql("SELECT * FROM building_data", con="sqlite:///triphorium.db")
     else:
-        df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")  # fallback
+        df = pd.read_csv("https://saas-back-v4.onrender.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")  # fallback
 except:
     st.warning("Unable to connect to backend. Using demo data.")
     df = pd.DataFrame({
