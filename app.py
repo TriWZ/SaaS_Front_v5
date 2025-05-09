@@ -23,12 +23,15 @@ st.markdown(f"**Climate Zone**: {climate_zone}")
 # Fetch energy data from API
 st.subheader("10-Year Energy Trends")
 try:
-    res = requests.get(f"{API_URL}/energy/")
+    res = requests.get(f"{API_URL}/energy/data")
     if res.status_code == 200:
-        data = requests.get("https://saas-back-v4.onrender.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")
-        df = pd.read_sql("SELECT * FROM building_data", con="sqlite:///triphorium.db")
+        df = pd.DataFrame(res.json())  # ✅ 从后端获取真实数据
     else:
-        df = pd.read_csv("https://saas-back-v4.onrender.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")  # fallback
+        st.warning("Backend returned error. Using demo data.")
+        df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")
+except Exception as e:
+    st.warning("Unable to connect to backend. Using demo data.")
+    df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv")
 except:
     st.warning("Unable to connect to backend. Using demo data.")
     df = pd.DataFrame({
